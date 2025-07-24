@@ -184,3 +184,5 @@ cython_debug/
 .chainlit/translations
 
 data
+
+.DS_Store

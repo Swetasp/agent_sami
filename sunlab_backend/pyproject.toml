@@ -1,0 +1,17 @@
+[project]
+name = "sunlab-backend"
+version = "0.1.0"
+requires-python = ">=3.9"
+dependencies = [
+    "langchain>=0.1.0",
+    "pydantic>=2.6",
+    "scanpy>=1.11",
+    "pandas>=2.2",
+    "numpy>=2.0",
+    "plotly>=5.20",
+    "matplotlib>=3.8",
+    "jupyter>=1.0",
+    "nbclient>=0.10",
+    "python-dotenv>=1.0",
+    "rpy2>=3.5",
+]
