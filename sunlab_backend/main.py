@@ -19,7 +19,8 @@ def main():
     data_signature = f"AnnData with {data.n_obs} obs × {data.n_vars} vars"
 
     # Initialize agents
-    llm = Ollama(model='llama3.1', base_url='http://localhost:11430')  # plug Groq/OpenAI later
+    # llm = Ollama(model='llama3.1', base_url='http://localhost:11430')  # plug Groq/OpenAI later
+    llm = Ollama(model='llama3', base_url='http://localhost:11434')
     memory = GlobalMemory()
 
     # >>> FIXED: pass data_representation into Planner
