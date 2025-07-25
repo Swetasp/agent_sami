@@ -70,7 +70,7 @@ Strictly return a JSON object in the following format (no extra fields):
 
         # Use the LLM to get the response
         response = self.llm.invoke(prompt)
-
+        print("Planner response - " + response)
         # Attempt to extract and parse the JSON
         parsed_json = extract_and_parse_json(response)
 
