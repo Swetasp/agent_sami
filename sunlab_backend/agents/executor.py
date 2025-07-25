@@ -15,7 +15,7 @@ class ExecutionResult:
     stdout: str
     stderr: str
     notebook_path: Optional[str]
-    explanation: str
+    # explanation: str
 
 class Executor:
     def __init__(self, llm, data_path: str, memory, sandbox: CodeSandbox):
@@ -58,14 +58,14 @@ class Executor:
         gen: GeneratedCode = self.programmer.generate(step_description, self.data_path)
 
         # 2) Install optional requirements (best effort)
-        self._maybe_pip_install(gen.requirements)
+        # self._maybe_pip_install(gen.requirements)
 
         # 3) (Optional) also drop the code cell in a notebook
-        self.sandbox.add_markdown_cell(f"### Step: {step_description}\n\n{gen.explanation}")
-        self.sandbox.add_code_cell(gen.code)
+        self.sandbox.add_markdown_cell(f"### Step: {step_description}\n")
+        self.sandbox.add_code_cell(gen)
 
         # 4) Execute locally (fast feedback)
-        success, stdout, stderr, _ = self._run_python_locally(gen.code)
+        success, stdout, stderr, _ = self._run_python_locally(gen)
 
         nb_path = None
         # 5) Keep a record in the notebook (so user can open / replay)
@@ -78,12 +78,12 @@ class Executor:
             print("[Executor] Notebook execution failed:", e)
 
         # 6) Persist result into memory
-        self.memory.add({"step": step_description, "success": success, "stdout": stdout, "stderr": stderr})
+        # self.memory.add({"step": step_description, "success": success, "stdout": stdout, "stderr": stderr})
 
         return ExecutionResult(
             success=success,
             stdout=stdout,
             stderr=stderr,
             notebook_path=nb_path,
-            explanation=gen.explanation
+            # explanation=gen.explanation
         )

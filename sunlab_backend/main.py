@@ -15,14 +15,16 @@ def main():
 
     # Load & summarize data
     adata = load_csv_as_adata(data_path)
-    print("Data shape:", adata.shape)
+    data_representation = str(adata)
+    print(data_representation)
+    # print("Data shape:", adata.shape)
 
-    data_signature = f"adata.shape={adata.shape}, obs={len(adata.obs.columns)}, var={len(adata.var.columns)}"
+    # data_signature = f"adata.shape={adata.shape}, obs={len(adata.obs.columns)}, var={len(adata.var.columns)}"
 
     # === Wire agents ===
     llm = Ollama(model="llama3", base_url="http://localhost:11434", temperature=0.0)
     memory = GlobalMemory()
-    planner = Planner(llm, data_signature)
+    planner = Planner(llm, data_representation)
     sandbox = CodeSandbox("outputs/analysis.ipynb")
     executor = Executor(llm, data_path, memory, sandbox)
     evaluator = Evaluator(llm)

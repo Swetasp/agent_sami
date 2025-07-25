@@ -28,7 +28,7 @@ class Planner:
         # Prompt template used for task planning
         self.prompt_template = """You are an assistant specialized in bioinformatics.
 Based on the information below, generate a **detailed and executable** task plan for the user's multi-omics or single-cell data analysis.
-The output **must** be valid JSON (no extra text), so it can be directly parsed for subtask extraction and execution.
+The output **must** be valid JSON (no extra text), so it can be directly parsed for subtask extraction and execution. Do not give any additional notes or explanations.
 
 User Task:
 {user_task}
