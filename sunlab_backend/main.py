@@ -11,7 +11,8 @@ import os
 # For now, use a local Ollama LLM. Replace with Groq/OpenAI if needed.
 from langchain_community.llms import Ollama
 
-from langchain_community.chat_models import ChatOpenAI
+# from langchain_community.chat_models import ChatOpenAI
+from langchain_openai import ChatOpenAI
 
 def main():
     task = input("Enter your analysis task: ")
