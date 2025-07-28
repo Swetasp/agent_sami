@@ -14,23 +14,21 @@ Please write Python code to complete the current step based on the following inf
 
 You will receive:
 - A step to execute from a biological data analysis pipeline.
-- A CSV/H5AD path you can read with pandas if needed.
+- A CSV/H5AD path you can read with scanpy/pandas if needed.
 
 Return a JSON object with this exact schema:
-
-{{
-  "code": "A complete python script that can be run as-is",
-  "commentary": "Short explanation of what the code does (optional)"
-}}
 
 Step to implement: "{step_description}"
 Data path: "{data_path}"
 
-Rules:
+Rules
 - The code must use the data file path: {data_path}
+- Always use pandas to load CSV files, and use anndata.AnnData(df) to convert to AnnData if needed.
 - The code should include necessary imports and data loading.
 - Do not add any comments, just provide the code.
 - The output format should be a code block enclosed in ```python and ```
+- ALWAYS treat file paths as raw strings (prefix them with r"") to avoid invalid escape sequence errors on Windows.
+- Use only functions, classes, or methods that are available and recommended in the latest stable version of any library used (e.g., scanpy, pandas, numpy, etc.).
 """
 
 class CodeProgrammer:
@@ -43,9 +41,11 @@ class CodeProgrammer:
             data_path=data_path,
         )
         raw = self.llm.invoke(prompt)
-        code = self.extract_code(raw)
+        # print("RAW: ")
+        # print(raw)
+        code = self.extract_code(raw.content)
         # Log raw LLM content for debugging
-        print("\n[CodeProgrammer raw LLM output]\n", raw, "\n")
+        print("\n[CodeProgrammer raw LLM output]\n", raw.content, "\n")
         print("\n[CodeProgrammer code LLM output]\n", code, "\n")
 
         # parsed = extract_and_parse_json(raw)

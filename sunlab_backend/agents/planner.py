@@ -70,9 +70,12 @@ Strictly return a JSON object in the following format (no extra fields):
 
         # Use the LLM to get the response
         response = self.llm.invoke(prompt)
-        print("Planner response - " + response)
+        # print("Planner response - " + response)
+        print("Planner response:")
+        print(response.content)
+        print("Type of response: ", type(response.content))
         # Attempt to extract and parse the JSON
-        parsed_json = extract_and_parse_json(response)
+        parsed_json = extract_and_parse_json(response.content)
 
         if parsed_json and isinstance(parsed_json, dict):
             steps = parsed_json.get("steps", [])
