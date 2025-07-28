@@ -3,20 +3,18 @@ import tempfile
 import subprocess
 import textwrap
 from typing import Optional
-
 from agents.code_programmer import CodeProgrammer, GeneratedCode
 from utils.json_utils import extract_and_parse_json
 from code_sandbox import CodeSandbox  # your working sandbox
 from dataclasses import dataclass
-
 @dataclass
 class ExecutionResult:
     success: bool
     stdout: str
     stderr: str
     notebook_path: Optional[str]
+    code: Optional[str] = None
     # explanation: str
-
 class Executor:
     def __init__(self, llm, data_path: str, memory, sandbox: CodeSandbox):
         self.llm = llm
@@ -24,7 +22,6 @@ class Executor:
         self.memory = memory
         self.programmer = CodeProgrammer(llm)
         self.sandbox = sandbox
-
     def _maybe_pip_install(self, requirements):
         if not requirements:
             return
@@ -34,7 +31,6 @@ class Executor:
         except subprocess.CalledProcessError as e:
             # Non-fatal: we’ll still try to run the code
             print("[Executor] pip install failed:", e.stderr)
-
     def _run_python_locally(self, code: str, timeout: int = 600):
         with tempfile.NamedTemporaryFile(mode="w", suffix=".py", delete=False) as f:
             f.write(code)
@@ -52,21 +48,16 @@ class Executor:
             proc.kill()
             return False, "", "TimeoutExpired", path
         return success, stdout, stderr, path
-
     def execute_step(self, step_description: str) -> ExecutionResult:
         # 1) Ask LLM for code
         gen: GeneratedCode = self.programmer.generate(step_description, self.data_path)
-
         # 2) Install optional requirements (best effort)
         # self._maybe_pip_install(gen.requirements)
-
         # 3) (Optional) also drop the code cell in a notebook
         self.sandbox.add_markdown_cell(f"### Step: {step_description}\n")
         self.sandbox.add_code_cell(gen)
-
         # 4) Execute locally (fast feedback)
         success, stdout, stderr, _ = self._run_python_locally(gen)
-
         nb_path = None
         # 5) Keep a record in the notebook (so user can open / replay)
         #    You can decide to only save if success, or always save.
@@ -76,10 +67,8 @@ class Executor:
         except Exception as e:
             # notebook execution failing shouldn’t block local result
             print("[Executor] Notebook execution failed:", e)
-
         # 6) Persist result into memory
         # self.memory.add({"step": step_description, "success": success, "stdout": stdout, "stderr": stderr})
-
         return ExecutionResult(
             success=success,
             stdout=stdout,
@@ -87,3 +76,22 @@ class Executor:
             notebook_path=nb_path,
             # explanation=gen.explanation
         )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

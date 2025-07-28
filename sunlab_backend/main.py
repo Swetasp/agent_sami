@@ -59,5 +59,18 @@ def main():
         print("Stderr:\n", result.stderr)
         print("Notebook:", result.notebook_path or "not saved")
 
+    # Run evaluation
+    evaluation = evaluator.evaluate_step(
+        step_description=step["description"],
+        code=result.code,
+        stdout=result.stdout,
+        stderr=result.stderr,
+    )
+
+    print("\nEvaluation:")
+    print(f"- Passed: {evaluation.passed}")
+    print(f"- Score: {evaluation.score}")
+    print(f"- Explanation: {evaluation.explanation}")
+
 if __name__ == "__main__":
     main()
