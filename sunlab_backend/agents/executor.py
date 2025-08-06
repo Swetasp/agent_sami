@@ -61,12 +61,7 @@ class Executor:
         nb_path = None
         # 5) Keep a record in the notebook (so user can open / replay)
         #    You can decide to only save if success, or always save.
-        try:
-            res = self.sandbox.execute()
-            nb_path = res.notebook_path
-        except Exception as e:
-            # notebook execution failing shouldn’t block local result
-            print("[Executor] Notebook execution failed:", e)
+        # 
         # 6) Persist result into memory
         # self.memory.add({"step": step_description, "success": success, "stdout": stdout, "stderr": stderr})
         return ExecutionResult(
@@ -77,7 +72,13 @@ class Executor:
             code=gen
             # explanation=gen.explanation
         )
-
+    def finalize_notebook(self) -> Optional[str]:
+            try:
+                result = self.sandbox.execute()
+                return result.notebook_path
+            except Exception as e:
+                print("[Executor] Notebook execution failed:", e)
+                return None
 
 
 

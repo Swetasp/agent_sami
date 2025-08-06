@@ -91,11 +91,13 @@ def main():
             data_description=data_representation,
             global_memory=global_memory,
         )
+    
         global_memory.add_code(result.code)
         print("Success:", result.success)
         print("Stdout:\n", result.stdout)
         print("Stderr:\n", result.stderr)
         print("Notebook:", result.notebook_path or "not saved")
+    executor.finalize_notebook()
 
     # Run evaluation
     evaluation = evaluator.evaluate_step(
