@@ -48,9 +48,9 @@ class Executor:
             proc.kill()
             return False, "", "TimeoutExpired", path
         return success, stdout, stderr, path
-    def execute_step(self, step_description: str) -> ExecutionResult:
+    def execute_step(self, step_description: str, user_requirements, data_description, global_memory) -> ExecutionResult:
         # 1) Ask LLM for code
-        gen: GeneratedCode = self.programmer.generate(step_description, self.data_path)
+        gen: GeneratedCode = self.programmer.generate(step_description, self.data_path, user_requirements, data_description, global_memory)
         # 2) Install optional requirements (best effort)
         # self._maybe_pip_install(gen.requirements)
         # 3) (Optional) also drop the code cell in a notebook
@@ -74,6 +74,7 @@ class Executor:
             stdout=stdout,
             stderr=stderr,
             notebook_path=nb_path,
+            code=gen
             # explanation=gen.explanation
         )
 
